@@ -1,3 +1,121 @@
+## LEDE/OpenWrt 开启无线 AP，并通过上级路由器上网的完整教程
+### 最终网络拓扑
+```
+上级路由器：192.168.31.1
+        |
+      网线
+        |
+      eth0
+        |
+     br-lan
+     /    \
+ eth0    wlanX(AP)
+          |
+       手机/电脑
+```
+### 无线热点
+```
+SSID: IGKBOARD_AP
+密码: 12345678
+```
+## 启动shell脚本
+```
+#!/bin/sh
+
+echo "========== 1. 配置 LAN =========="
+
+uci set network.lan.proto='static'
+uci set network.lan.ipaddr='192.168.31.25'
+uci set network.lan.netmask='255.255.255.0'
+uci set network.lan.gateway='192.168.31.1'
+
+uci delete network.lan.dns 2>/dev/null
+uci add_list network.lan.dns='192.168.31.1'
+uci add_list network.lan.dns='223.5.5.5'
+uci add_list network.lan.dns='114.114.114.114'
+
+uci commit network
+
+
+echo "========== 2. 配置无线 AP =========="
+
+uci set wireless.radio0.disabled='0'
+uci set wireless.radio0.band='2g'
+uci set wireless.radio0.channel='6'
+uci set wireless.radio0.htmode='HT20'
+uci set wireless.radio0.country='CN'
+
+uci set wireless.default_radio0.device='radio0'
+uci set wireless.default_radio0.mode='ap'
+uci set wireless.default_radio0.network='lan'
+uci set wireless.default_radio0.ssid='IGKBOARD_AP'
+uci set wireless.default_radio0.encryption='psk2'
+uci set wireless.default_radio0.key='12345678'
+uci set wireless.default_radio0.disabled='0'
+
+uci commit wireless
+
+
+echo "========== 3. 关闭本机 DHCP =========="
+
+/etc/init.d/dnsmasq stop 2>/dev/null
+/etc/init.d/dnsmasq disable 2>/dev/null
+
+/etc/init.d/odhcpd stop 2>/dev/null
+/etc/init.d/odhcpd disable 2>/dev/null
+
+
+echo "========== 4. 重启网络和 WiFi =========="
+
+/etc/init.d/network restart
+
+sleep 3
+
+wifi down 2>/dev/null
+sleep 2
+wifi reload
+
+sleep 3
+
+
+echo "========== 5. 修复 DNS =========="
+
+echo "nameserver 223.5.5.5" > /tmp/resolv.conf
+echo "nameserver 114.114.114.114" >> /tmp/resolv.conf
+
+
+echo "========== 6. 显示当前状态 =========="
+
+echo ""
+echo "----- route -n -----"
+route -n
+
+echo ""
+echo "----- brctl show -----"
+brctl show
+
+echo ""
+echo "----- iw dev -----"
+iw dev
+
+echo ""
+echo "----- wifi status -----"
+wifi status
+
+echo ""
+echo "----- DNS -----"
+cat /tmp/resolv.conf
+
+echo ""
+echo "========== 配置完成 =========="
+echo "AP 名称: IGKBOARD_AP"
+echo "AP 密码: 12345678"
+echo "板子 IP: 192.168.31.25"
+echo "上级网关: 192.168.31.1"
+```
+
+
+
 # 欢迎来到 Lean 的 LEDE 源码仓库
 
 为国产龙芯 LOONGSON SoC loongarch64 / 飞腾 Phytium 腾锐 D2000 系列架构添加支持
