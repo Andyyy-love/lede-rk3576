@@ -113,7 +113,7 @@ echo "AP 密码: 12345678"
 echo "板子 IP: 192.168.31.25"
 echo "上级网关: 192.168.31.1"
 ```
-## 备注：关于ubbot启动失败问题
+## 备注：关于uboot启动失败问题
 ```
 lede-rk3576/build_dir/target-aarch64_generic_musl/u-boot-sige5-rk3576/u-boot-2026.01/dts/upstream/src/arm64/rockchip/rk3576-armsom-sige5.dts路径下
 
@@ -132,6 +132,7 @@ lede-rk3576/build_dir/target-aarch64_generic_musl/u-boot-sige5-rk3576/u-boot-202
 	status = "okay";
 };
 
+
 -----修改后-----
 &sdhci {
 	bus-width = <8>;
@@ -142,7 +143,27 @@ lede-rk3576/build_dir/target-aarch64_generic_musl/u-boot-sige5-rk3576/u-boot-202
 	status = "okay";
 };
 ```
+## 备注：生成镜像路径
+```
+rockchip@ubuntu22:/work/rockchip/hejh/lede-rk3576/bin/targets/rockchip/armv8$ gunzip openwrt-rockchip-armv8-igkboard_rk3576-ext4-sysupgrade.img.gz
+gzip: openwrt-rockchip-armv8-igkboard_rk3576-ext4-sysupgrade.img already exists; do you wish to overwrite (y or n)? y
 
+gzip: openwrt-rockchip-armv8-igkboard_rk3576-ext4-sysupgrade.img.gz: decompression OK, trailing garbage ignored
+rockchip@ubuntu22:/work/rockchip/hejh/lede-rk3576/bin/targets/rockchip/armv8$ ls -la
+total 279248
+drwxr-xr-x 3 rockchip rockchip      4096  5月  8 21:02 .
+drwxr-xr-x 3 rockchip rockchip      4096  5月  7 19:26 ..
+-rw-r--r-- 1 rockchip rockchip       832  5月  8 21:00 config.buildinfo
+-rw-r--r-- 1 rockchip rockchip       264  5月  8 21:00 feeds.buildinfo
+-rw-r--r-- 1 rockchip rockchip 268435456  5月  8 21:01 openwrt-rockchip-armv8-igkboard_rk3576-ext4-sysupgrade.img
+-rw-r--r-- 1 rockchip rockchip      7948  5月  8 21:01 openwrt-rockchip-armv8-igkboard_rk3576.manifest
+-rw-r--r-- 1 rockchip rockchip  17463924  5月  8 21:01 openwrt-rockchip-armv8-igkboard_rk3576-squashfs-sysupgrade.img.gz
+drwxr-xr-x 2 rockchip rockchip     12288  5月  8 21:00 packages
+-rw-r--r-- 1 rockchip rockchip      1981  5月  8 21:01 profiles.json
+-rw-r--r-- 1 rockchip rockchip       828  5月  8 21:01 sha256sums
+-rw-r--r-- 1 rockchip rockchip        16  5月  8 21:00 version.buildinfo
+rockchip@ubuntu22:/work/rockchip/hejh/lede-rk3576/bin/targets/rockchip/armv8$ 
+```
 
 # 欢迎来到 Lean 的 LEDE 源码仓库
 
