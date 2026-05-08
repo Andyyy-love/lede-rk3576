@@ -244,9 +244,14 @@
         leds: leds {
                 compatible = "gpio-leds";
 
-                usb_host_device: usb-host-device {
-                        gpios = <&gpio4 RK_PA0 GPIO_ACTIVE_HIGH>;
-                        default-state = "on";
+                work_led: work {
+                    gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_HIGH>;
+                    linux,default-trigger = "heartbeat";
+                };
+
+                usb_host_or_device: usb_host_or_device{
+                    gpios = <&gpio4 RK_PA0 GPIO_ACTIVE_HIGH>;
+                    default-state = "on";
                 };
         };
 };

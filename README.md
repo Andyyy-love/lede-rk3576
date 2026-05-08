@@ -113,7 +113,35 @@ echo "AP 密码: 12345678"
 echo "板子 IP: 192.168.31.25"
 echo "上级网关: 192.168.31.1"
 ```
+## 备注：关于ubbot启动失败问题
+```
+lede-rk3576/build_dir/target-aarch64_generic_musl/u-boot-sige5-rk3576/u-boot-2026.01/dts/upstream/src/arm64/rockchip/rk3576-armsom-sige5.dts路径下
 
+需要修改此处，emmc高速模式问题
+
+-----初始-----
+&sdhci {
+	bus-width = <8>;
+	full-pwr-cycle-in-suspend;
+	max-frequency = <50000000>;
+	mmc-hs400-1_8v;
+	mmc-hs400-enhanced-strobe;
+	no-sdio;
+	no-sd;
+	non-removable;
+	status = "okay";
+};
+
+-----修改后-----
+&sdhci {
+	bus-width = <8>;
+	max-frequency = <50000000>;
+	no-sdio;
+	no-sd;
+	non-removable;
+	status = "okay";
+};
+```
 
 
 # 欢迎来到 Lean 的 LEDE 源码仓库
